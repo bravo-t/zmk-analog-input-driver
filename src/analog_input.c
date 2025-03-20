@@ -167,26 +167,27 @@ static struct k_work_q analog_input_work_q;
 
 static void sampling_work_handler(struct k_work *work) {
     struct analog_input_data *data = CONTAINER_OF(work, struct analog_input_data, sampling_work);
-    // LOG_DBG("sampling work triggered");
+    LOG_DBG("sampling work triggered");
     analog_input_report_data(data->dev);
 }
 
 static void sampling_timer_handler(struct k_timer *timer) {
     struct analog_input_data *data = CONTAINER_OF(timer, struct analog_input_data, sampling_timer);
-    // LOG_DBG("sampling timer triggered");
+    LOG_DBG("sampling timer triggered");
     k_work_submit_to_queue(&analog_input_work_q, &data->sampling_work);
     k_work_submit(&data->sampling_work);
 }
 
 static int active_set_value(const struct device *dev, bool active) {
     struct analog_input_data *data = dev->data;
-    if (data->actived == active) return 0;
     LOG_DBG("%d", active ? 1 : 0);
+    if (data->actived == active) return 0;
     data->actived = active;
     return 0;
 }
 
 static int sample_hz_set_value(const struct device *dev, uint32_t hz) {
+    LOG_DBG("sample_hz_set_value");
     struct analog_input_data *data = dev->data;
 
     if (unlikely(!data->ready)) {
@@ -205,6 +206,7 @@ static int sample_hz_set_value(const struct device *dev, uint32_t hz) {
 }
 
 static int enable_set_value(const struct device *dev, bool enable) {
+    LOG_DBG("enable_set_value");
     struct analog_input_data *data = dev->data;
     // const struct tb6612fng_config *config = dev->config;
 
@@ -242,7 +244,7 @@ static void analog_input_async_init(struct k_work *work) {
     const struct device *dev = data->dev;
     const struct analog_input_config *config = dev->config;
 
-    // LOG_DBG("ANALOG_INPUT async init");
+    LOG_DBG("ANALOG_INPUT async init");
     uint32_t ch_mask = 0;
 
     for (uint8_t i = 0; i < config->io_channels_len; i++) {
@@ -324,6 +326,7 @@ static void analog_input_async_init(struct k_work *work) {
 }
 
 static int analog_input_init(const struct device *dev) {
+    LOG_DBG("ANALOG_INPUT init");
     struct analog_input_data *data = dev->data;
     // const struct analog_input_config *config = dev->config;
     int err = 0;
@@ -337,6 +340,7 @@ static int analog_input_init(const struct device *dev) {
 
 static int analog_input_attr_set(const struct device *dev, enum sensor_channel chan,
                             enum sensor_attribute attr, const struct sensor_value *val) {
+    LOG_DBG("ANALOG_INPUT attr set");
     struct analog_input_data *data = dev->data;
     // const struct analog_input_config *config = dev->config;
     int err;
@@ -372,6 +376,7 @@ static int analog_input_attr_set(const struct device *dev, enum sensor_channel c
 }
 
 static int analog_input_sample_fetch(const struct device *dev, enum sensor_channel chan) {
+    LOG_DBG("ANALOG_INPUT sample fetch");
     struct analog_input_data *data = dev->data;
     // const struct analog_input_config *config = dev->config;
 
@@ -395,6 +400,7 @@ static int analog_input_sample_fetch(const struct device *dev, enum sensor_chann
 
 static int analog_input_channel_get(const struct device *dev, enum sensor_channel chan,
                                     struct sensor_value *val) {
+    LOG_DBG("ANALOG_INPUT channel get");
     struct analog_input_data *data = dev->data;
     const struct analog_input_config *config = dev->config;
 
