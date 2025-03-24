@@ -167,13 +167,13 @@ static struct k_work_q analog_input_work_q;
 
 static void sampling_work_handler(struct k_work *work) {
     struct analog_input_data *data = CONTAINER_OF(work, struct analog_input_data, sampling_work);
-    LOG_DBG("sampling work triggered");
+    //LOG_DBG("sampling work triggered");
     analog_input_report_data(data->dev);
 }
 
 static void sampling_timer_handler(struct k_timer *timer) {
     struct analog_input_data *data = CONTAINER_OF(timer, struct analog_input_data, sampling_timer);
-    LOG_DBG("sampling timer triggered");
+    //LOG_DBG("sampling timer triggered");
     k_work_submit_to_queue(&analog_input_work_q, &data->sampling_work);
     k_work_submit(&data->sampling_work);
 }
